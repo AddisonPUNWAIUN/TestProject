@@ -48,7 +48,7 @@ var temp=[-1,-1,-1,-1,-1,-1];
         { src: 'game_sample/js/ChooseCharacter.js', lookFor: 'ChooseCharacter' },
         { src: 'game_sample/js/Map.js', lookFor: 'GameMap' },
         { src: 'game_sample/js/RedBall.js', lookFor: 'RedBall' },
-  //   { src: 'game_sample/js/.js', lookFor: '' },
+        { src: 'game_sample/js/boss1.js', lookFor: 'boss1' },
     // { src: 'game_sample/js/.js', lookFor: '' },
      //{ src: 'game_sample/js/.js', lookFor: '' },
   //   { src: 'game_sample/js/.js', lookFor: '' },

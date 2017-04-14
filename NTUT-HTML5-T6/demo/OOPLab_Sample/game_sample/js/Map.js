@@ -2,6 +2,18 @@ var GameMap = function(){
     this.PH = 0;
     this.PW = 0;
 
+    this.sameball = [[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],
+					 [0,0],[0,0],[0,0],[0,0],[0,0],[0,0],
+					 [0,0],[0,0],[0,0],[0,0],[0,0],[0,0],
+					 [0,0],[0,0],[0,0],[0,0],[0,0],[0,0],
+					 [0,0],[0,0],[0,0],[0,0],[0,0],[0,0],];
+
+	this.same = [[-1,-1,-1,-1,-1,-1],
+                 [-1,-1,-1,-1,-1,-1],
+                 [-1,-1,-1,-1,-1,-1],
+                 [-1,-1,-1,-1,-1,-1],
+                 [-1,-1,-1,-1,-1,-1]];
+
     this.position = {
     x: 1000,
     y:900
@@ -21,6 +33,8 @@ var GameMap = function(){
         this.HATO.scale = 0.75;
         this.BACK = new Framework.Sprite(define.imagePath + 'touch_area.jpg');
         this.BACK.scale = 0.8;
+        this.blood = new Framework.Sprite(define.imagePath + 'blood_frame.png');
+        this.blood.scale = 0.8;
     };
 
     this.random = function(){
@@ -96,15 +110,17 @@ var GameMap = function(){
 
     this.fall = function(){
 
-        for(var i=5; i>=1; i--){
-            for(var j=4; j>=0; j--){
+        for(var i=5; i>=0; i--){
+            for(var j=4; j>=1; j--){
                 if(this.map[j][i]=== -1){
-                    for(var k=j-1;k>=0;k--){
+                    for(var k=j;k>=0;k--){
                       //this.map[0][1]=1;
                         if(this.map[k][i]!= -1){
-                          //  this.map[0][0]=1;
+                          console.log(i,j);
+                          console.log(i,k);
                             this.map[j][i]=this.map[k][i];
                             this.map[k][i]= -1;
+                            break;
                         }
                     }
                 }
@@ -116,52 +132,102 @@ var GameMap = function(){
         var x=1;
         var y=1;
         var z=0;
-        var helper=1;
+        var helper=0;
+        var sameNum=0;
         for(var i=0; i<5; i++){
             for(var j=0; j<6; j++){
-                if(this.map[i][j]!=-1){
-                  //  while(helper>=1){
-                      //  helper=1;
-                        z=this.map[i][j];
-                        if(j+x<=5){
-                        while(z===this.map[i][j+x]){
-                            x++;
-                            if(j+x===6){break;}
-                        }
-                        x=x-1;
-                        if(x>=2){
-                            this.map[i][j]=-1;
-                            while(x!=0){
-                                this.map[i][j+x]=-1;
-                                x--;
-                              //    helper++;
-                            }
-                        }
-                        x=1;
+            //  console.log(i,j);
+                if(this.map[i][j]!== -1){
+                  z=this.map[i][j];
+                  this.same[i][j] = 1;
+                  this.sameball[sameNum][0]=i;
+                  this.sameball[sameNum][1]=j;
+                  sameNum++;
+                  for(;;){
+                  //  console.log(helper);
+                    x=this.sameball[helper][0];
+                    y=this.sameball[helper][1];
+                    if(x-1>=0){
+                      if(this.map[x-1][y]===z && this.same[x-1][y] !=1){
+                        this.same[x-1][y] = 1;
+                        this.sameball[sameNum][0]=x-1;
+                        this.sameball[sameNum][1]=y;
+                        sameNum++;
                       }
-                        if(i+y<=4){
-                        while(z===this.map[i+y][j]){
-                            y++;
-                            if(i+y===5){break;}
-                        }
-                        y=y-1;
-                        if(y>=2){
-                            this.map[i][j]=-1;
-                            while(y!=0){
-                                this.map[i+y][j] =-1;
-                                y--;
-                              //  helper++;
-                            }
-                        }
-                        y=1;
-                      //  if(helper ===1) break;
+                    }
+                    if(y-1>=0){
+                      if(this.map[x][y-1]===z && this.same[x][y-1] !=1){
+                        this.same[x][y-1] = 1;
+                        this.sameball[sameNum][0]=x;
+                        this.sameball[sameNum][1]=y-1;
+                        this.sameNum++;
                       }
-                  //  }
+                    }
+                    if(x+1<5){
+                      if(this.map[x+1][y]===z && this.same[x+1][y] !=1){
+                        this.same[x+1][y] = 1;
+                        this.sameball[sameNum][0]=x+1;
+                        this.sameball[sameNum][1]=y;
+                        sameNum++;
+                      }
+                    }
+                    if(y+1<6){
+                      if(this.map[x][y+1]===z && this.same[x][y+1] !=1){
+                        this.same[x][y+1] = 1;
+                        this.sameball[sameNum][0]=x;
+                        this.sameball[sameNum][1]=y+1;
+                        sameNum++;
+                      }
+                    }
+                    helper++;
+                    if(helper===sameNum) {break;}
+                    if(sameNum===0) {break;}
+                  }
+    for(var helper=0; helper<5; helper++){
+                    x=0;
+    for(var sameNum=0; sameNum<6; sameNum++){
+        if (this.same[helper][sameNum]===1||this.same[helper][sameNum]===2){
+            x++;
+        }
+    }
+    if(x>=3){
+        for(sameNum=0; sameNum<6; sameNum++){
+			if (this.same[helper][sameNum]===1){
+            this.same[helper][sameNum]=2;
+			this.map[helper][sameNum]=-1;
+			}
+		}
+    }
+}
+
+for(var sameNum=0; sameNum<6; sameNum++){
+  x=0;
+    for(var helper=0; helper<5; helper++){
+        if (this.same[helper][sameNum]===1||this.same[helper][sameNum]===2){
+            x++;
+        }
+    }
+    if(x>=3){
+        for(helper=0; helper<5; helper++){
+			if (this.same[helper][sameNum]===1){
+            this.same[helper][sameNum]=2;
+			this.map[helper][sameNum]=-1;
+			}
+		}
+    }
+}
+x=0;
+for(helper=0; helper<5; helper++){
+  for(sameNum=0; sameNum<6; sameNum++){
+    this.same[helper][sameNum]=-1;
+  }
+}
+helper=0;
+sameNum=0;
+                  }
+
                 }
             }
-        }
-
-
 
     };
 
@@ -175,6 +241,12 @@ var GameMap = function(){
 
 
     this.draw =function(ctx){
+      var blood_picP={
+          x:700,
+          y:300
+        }
+        this.blood.position=blood_picP;
+        this.blood.draw(ctx);
         var picP ={
         x:700,
         y:500,
