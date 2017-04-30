@@ -1,6 +1,17 @@
 var GameMap = function(){
     this.PH = 0;
     this.PW = 0;
+    this.HiAtk =0;
+    this.KiAtk =0;
+    this.MituAtk =0;
+    this.HikariAtk =0;
+    this.YamiAtk =0;
+    this.HealNum =0;
+    this.BossHP =30;
+    this.MyHp=0;
+    this.BossAtkCd =3 ;
+    this.round =0;
+    this.hasmove =0;
 
     this.sameball = [[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],
 					 [0,0],[0,0],[0,0],[0,0],[0,0],[0,0],
@@ -20,21 +31,21 @@ var GameMap = function(){
     };
         this.load = function(){
         this.HI = new Framework.Sprite(define.imagePath + 'HI.png');
-        this.HI.scale = 0.75;
+        this.HI.scale = 0.70;
         this.KI = new Framework.Sprite(define.imagePath + 'KI.png');
-        this.KI.scale = 0.75;
+        this.KI.scale = 0.70;
         this.MITU = new Framework.Sprite(define.imagePath + 'MITU.png');
-        this.MITU.scale = 0.75;
+        this.MITU.scale = 0.70;
         this.HIKIRI = new Framework.Sprite(define.imagePath + 'HIKARI.png');
-        this.HIKIRI.scale = 0.75;
+        this.HIKIRI.scale = 0.70;
         this.YAMI = new Framework.Sprite(define.imagePath + 'YAMI.png');
-        this.YAMI.scale = 0.75;
+        this.YAMI.scale = 0.70;
         this.HATO = new Framework.Sprite(define.imagePath + 'HATO.png');
-        this.HATO.scale = 0.75;
+        this.HATO.scale = 0.70;
         this.BACK = new Framework.Sprite(define.imagePath + 'touch_area.jpg');
-        this.BACK.scale = 0.8;
+        this.BACK.scale = 0.75;
         this.blood = new Framework.Sprite(define.imagePath + 'blood_frame.png');
-        this.blood.scale = 0.8;
+        this.blood.scale = 0.75;
     };
 
     this.random = function(){
@@ -50,45 +61,6 @@ var GameMap = function(){
                 [this.random(),this.random(),this.random(),this.random(),this.random(),this.random()],
                 [this.random(),this.random(),this.random(),this.random(),this.random(),this.random()]];
 
-  /**  this.init = function(){
-        //this.player1.StepMovedCallBack.push(this.playerMovedHandler);
-        //this.constants = new Constants();
-        this.mapArray = [];
-        this.redArray = [];
-        this.greenArray = [];
-        this.blueArray = [];
-        this.yellowArray = [];
-        this.blackArray = [];
-        this.pinkArray = [];
-        this.noneArray = [];
-        //0 空地  1牆壁  2空木箱  3增加炸彈木箱  4增加威力木箱  -1增加炸彈數  -2增加炸彈power
-        for(var i=0; i<5; i++){
-            for(var j=0; j<6; j++){
-                this.mapArray[i][j]=this.random();
-                switch(intex){
-                    case 0:
-                        this.ballType=this.constants.DirectionEnum.RED;
-                        break;
-                    case 1:
-                        this.ballType=this.constants.DirectionEnum.GREEN;
-                        break;
-                    case  2:
-                        this.ballType=this.constants.DirectionEnum.BLUE;
-                        break;
-                    case   3:
-                        this.ballType=this.constants.DirectionEnum.YELL;
-                        break;
-                    case  4:
-                        this.ballType=this.constants.DirectionEnum.BLACK;
-                        break;
-                    case   5:
-                        this.ballType=this.constants.DirectionEnum.PINK;
-                        break;
-                    case   -1:
-                        this.ballType=this.constants.DirectionEnum.NONE;
-            }
-        }
-    };**/
 
     this.initialize =function(){
 
@@ -129,14 +101,16 @@ var GameMap = function(){
     };
 
     this.clear = function(){
+        var forReturn=0;
         var x=1;
         var y=1;
         var z=0;
         var helper=0;
         var sameNum=0;
+        var clearNum=0;
         for(var i=0; i<5; i++){
             for(var j=0; j<6; j++){
-            //  console.log(i,j);
+              //console.log(i,j);
                 if(this.map[i][j]!== -1){
                   z=this.map[i][j];
                   this.same[i][j] = 1;
@@ -144,7 +118,6 @@ var GameMap = function(){
                   this.sameball[sameNum][1]=j;
                   sameNum++;
                   for(;;){
-                  //  console.log(helper);
                     x=this.sameball[helper][0];
                     y=this.sameball[helper][1];
                     if(x-1>=0){
@@ -160,7 +133,7 @@ var GameMap = function(){
                         this.same[x][y-1] = 1;
                         this.sameball[sameNum][0]=x;
                         this.sameball[sameNum][1]=y-1;
-                        this.sameNum++;
+                        sameNum++;
                       }
                     }
                     if(x+1<5){
@@ -191,8 +164,10 @@ var GameMap = function(){
         }
     }
     if(x>=3){
+        forReturn=1;
         for(sameNum=0; sameNum<6; sameNum++){
 			if (this.same[helper][sameNum]===1){
+                clearNum++;
             this.same[helper][sameNum]=2;
 			this.map[helper][sameNum]=-1;
 			}
@@ -208,14 +183,40 @@ for(var sameNum=0; sameNum<6; sameNum++){
         }
     }
     if(x>=3){
+        forReturn=1;
         for(helper=0; helper<5; helper++){
 			if (this.same[helper][sameNum]===1){
+                clearNum++;
             this.same[helper][sameNum]=2;
 			this.map[helper][sameNum]=-1;
+                forReturn=1;
 			}
 		}
     }
 }
+                    console.log(z,clearNum);
+switch(z){
+case 0:
+    this.HiAtk=this.HiAtk+clearNum;
+    break;ß
+case 1:
+    this.KiAtk=this.KiAtk+clearNum;
+    break;
+case  2:
+    this.MituAtk=this.MituAtk+clearNum;
+    break;
+case   3:
+    this.HikariAtk=this.HikariAtk+clearNum;
+    break;
+case  4:
+    this.YamiAtk=this.YamiAtk+clearNum;
+    break;
+case   5:
+    this.HealNum =this.HealNum + clearNum;
+    break;
+}
+                    console.log(this.HiAtk,this.KiAtk,this.MituAtk,this.HikariAtk,this.YamiAtk);
+                    clearNum=0;
 x=0;
 for(helper=0; helper<5; helper++){
   for(sameNum=0; sameNum<6; sameNum++){
@@ -228,16 +229,19 @@ sameNum=0;
 
                 }
             }
+        if(forReturn===1){
+            console.log('OK');
+            this.fall();
+            console.log('OK');
+            this.reccreate();
+            console.log('OK');
+            this.clear();
+            console.log('OK');
 
-    };
-
-    this.remake = function(){
-        for(var i=4; i>=0; i--){
-            for(var j=5; j>=0; j--){
-
-            }
         }
     };
+
+
 
 
     this.draw =function(ctx){
@@ -249,15 +253,15 @@ sameNum=0;
         this.blood.draw(ctx);
         var picP ={
         x:700,
-        y:500,
+        y:512.5,
         }
         this.BACK.position=picP;
         this.BACK.draw(ctx);
         for(var i=0; i<5; i++){
             for(var j=0; j<6; j++){
                 var picP ={
-                           x:500+ 80*j,
-                           y:340+ 80*i,
+                           x:512+ 75*j,
+                           y:361+ 75*i,
                 }
                 switch(this.map[i][j]){
                     case 0:
@@ -292,20 +296,16 @@ sameNum=0;
         }
     };
 
+
 	this.mouseup = function(e) {
 		//this.isTouchArrow = false;
 	};
 
 	this.mousedown = function(e) {
-//var k = 0 ;
-//		var l = 0 ;
 		for(var i=0; i<5; i++){
 			for(var j=0; j<6; j++){
 				if (e.x > 460+ 80*j &&e.x < 540+ 80*j && e.y > 300+ 80*i && e.y < 380+ 80*i) {
 				    this.moveBall = this.map[i][j] ;
-				   // this.map[i][j] = -1 ;
-
-                    //this.draw(ctx);
 				    this.PH=i;
 				    this.PW=j;
 				}
@@ -319,57 +319,44 @@ this.mousemove = function(e) {
 
     for(var i=0; i<5; i++){
         for(var j=0; j<6; j++){
-            if (e.x > 460+ 80*j &&e.x < 540+ 80*j && e.y > 300+ 80*i && e.y < 380+ 80*i) {
+            if(this.PH!=i ||  this.PW!=j){
+            if (e.x > 475+ 75*j &&e.x < 547+ 75*j && e.y > 323+ 75*i && e.y < 387+ 75*i) {
+                if(this.hasmove==1) Framework.Game.audio.stop('MoveBall');
+                Framework.Game.audio.play({name: 'MoveBall'});
+                this.hasmove=1;
 
-                this.map[this.PH][this.PW]=this.map[i][j]  ;
-                this.map[i][j] = this.moveBall;
-                //this.draw(ctx);
-                this.PH=i;
-                this.PW=j;
+                  this.map[this.PH][this.PW]=this.map[i][j]  ;
+                  this.map[i][j] = this.moveBall;
+                  this.PH=i;
+                  this.PW=j;
+              }
             }
         }
     }
 
 
-   // console.log(e.x, e.y);
-   /** var k = 0 ;
-    var l = 0 ;
-           switch(this.moveBall){
-            case 0:
-                this.HI.position=e;
-               // this.HI.draw(ctx);
-                break;
-            case 1:
-                this.KI.position=e;
-               // this.KI.draw(ctx);
-                break;
-            case  2:
-                this.MITU.position=e;
-               // this.MITU.draw(ctx);
-                break;
-            case   3:
-                this.HIKIRI.position=e;
-               // this.HIKIRI.draw(ctx);
-                break;
-            case  4:
-                this.YAMI.position=e;
-               // this.YAMI.draw(ctx);
-                break;
-            case   5:
-                this.HATO.position=e;
-               // this.HATO.draw(ctx);
-                break;
+  };
+
+    this.atk = function() {
+        this.BossHP = this.BossHP - this.HiAtk -this.MituAtk -this.KiAtk - this.HikariAtk -this.YamiAtk ;
+        this.MyHp = this.MyHp +this.HealNum;
+        if(this.MyHp>30){
+            this.MyHp=30;
+
         }
-    for(var i=0; i<5; i++){
-        for(var j=0; j<6; j++){
-           // if (e.x > 50+ 100*j &&e.x < 150+ 100*j && e.y > 50+ 100*i && e.y < 50+ 100*j) {
-               // var map[i][j] = this.map[k][l] ;
-               // this.map[k][l] = -1 ;
-               // k=i;
-               // l=j;
-          //  }
+        console.log(this.MyHp,this.BossHP);
+        this.HiAtk =0;
+        this.KiAtk =0;
+        this.MituAtk =0;
+        this.HikariAtk =0;
+        this.YamiAtk =0;
+        this.HealNum =0;
+        this.round++;
+        if(this.round >=this.BossAtkCd ){
+            this.MyHp=this.MyHp-3;
+            this.round=0;
         }
-    }**/
-};
+
+    };
 
 }

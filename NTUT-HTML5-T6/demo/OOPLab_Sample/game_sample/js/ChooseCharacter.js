@@ -17,6 +17,8 @@ var ChooseCharacter = Framework.Class(Framework.Level , {
                this.currentTouch = { x: 0, y: 0 };
                this.count=0;
 
+               this.cc=-1;
+
                 //background
                 this.background.position = {
                     x: Framework.Game.getCanvasWidth() / 2,
@@ -81,8 +83,30 @@ var ChooseCharacter = Framework.Class(Framework.Level , {
              this.rootScene.draw(parentCtx);
            },
 
-          mousedown: function(e) {
+           mousemove: function(e) {
 
+              this.currentTouch = { x: e.x , y: e.y };
+
+              for(var i=0;i<10;i++){
+                if(this.currentTouch.x>=this.c[i].position.x-60 && this.currentTouch.x<=this.c[i].position.x+60 && this.currentTouch.y>=this.c[i].position.y-65 && this.currentTouch.y<=this.c[i].position.y+65 ){
+                    if(this.currentcharater!=i && this.currentcharater!=-1){this.c[this.currentcharater].scale = 1;}
+                    this.currentcharater=i;
+                    this.c[i].scale = 1.2;
+                    console.log("in:",this.currentcharater);
+                }
+                else {
+                  this.currentcharater=-1;
+                }
+              }
+
+
+
+
+
+           },
+
+          mousedown: function(e) {
+            var hasexit=0;
             this.currentTouch = { x: e.x , y: e.y };
 
             if(this.nochooseMSG===1){//x=+-222 y=+-22
@@ -100,6 +124,12 @@ var ChooseCharacter = Framework.Class(Framework.Level , {
            for(var i=0;i<10;i++){
               if(this.count>=6) break;
               if(this.currentTouch.x>=this.c[i].position.x-60 && this.currentTouch.x<=this.c[i].position.x+60 && this.currentTouch.y>=this.c[i].position.y-65 && this.currentTouch.y<=this.c[i].position.y+65 ){
+                  //檢查是否已選擇
+                  for(var j=0;j<6;j++){
+                      if(temp[j]===i) {hasexit=1;break;}
+                  }
+                  if(hasexit) break;
+                  //檢查是否已選擇
                   temp[this.count]=i;
                   this.number[this.count].position = {
                      x: this.c[i].position.x,
@@ -109,7 +139,7 @@ var ChooseCharacter = Framework.Class(Framework.Level , {
             }
            //選擇角色順序,存入全域變數 temp
 
-           //檢查是否有選擇隊員
+           //檢查是否有選擇隊員 start
            if(this.currentTouch.x>=this.start.position.x-164 && this.currentTouch.x<=this.start.position.x+164 && this.currentTouch.y>=this.start.position.y-65 && this.currentTouch.y<=this.start.position.y+65 ){
              if(temp[0]===-1){
                this.nochooseMSG=1;

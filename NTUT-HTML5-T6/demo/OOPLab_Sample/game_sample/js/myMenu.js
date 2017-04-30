@@ -1,4 +1,4 @@
-var MyMenu = Framework.exClass(Framework.GameMainMenu , {
+﻿var MyMenu = Framework.exClass(Framework.GameMainMenu , {
             //初始化loadingProgress需要用到的圖片
     initializeProgressResource: function() {
         this.loading = new Framework.Sprite(define.imagePath + 'loading.jpg');

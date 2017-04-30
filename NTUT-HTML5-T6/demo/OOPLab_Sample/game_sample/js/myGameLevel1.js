@@ -1,4 +1,4 @@
-var MyGame = Framework.Class(Framework.Level , {
+﻿var MyGame = Framework.Class(Framework.Level , {
 
 	load: function(){
 		//this.random = function(){fightbackground
@@ -50,6 +50,9 @@ var MyGame = Framework.Class(Framework.Level , {
 				 Framework.Game.audio.play({name: 'Fight', loop: true});
 
 			},
+			update: function() {
+			        this.gameMap.update();
+			    },
 
     draw:function(parentCtx){
         //this.rootScene.draw();
@@ -78,20 +81,6 @@ var MyGame = Framework.Class(Framework.Level , {
              click:function(e){
 
              },
-						 	
-						 touchstart: function (e) {
-					       //為了要讓Mouse和Touch都有一樣的事件
-					       //又要減少Duplicated code, 故在Touch事件被觸發時, 去Trigger Mouse事件
-					       this.mousedown(e[0]);
-					   },
-
-					   touchend: function (e) {
-					       this.mouseup();
-					   },
-
-					   touchmove: function (e) {
-					       this.mousemove(e[0]);
-					   },
 
              mousemove: function(e,parentCtx) {
              if (this.isTouchArrow) {
@@ -102,16 +91,11 @@ var MyGame = Framework.Class(Framework.Level , {
 
              mouseup: function(e,parentCtx) {
              if(this.isTouchArrow){
-             this.gameMap.clear();
-             this.gameMap.draw(parentCtx);
-						 this.gameMap.fall();
-						 this.gameMap.draw(parentCtx);
-						 this.gameMap.reccreate();
-						// setTimeout('',1000);
+                        this.gameMap.clear();
 						  this.gameMap.draw(parentCtx);
+                             this.gameMap.atk();
              this.isTouchArrow = false;
-             }
-             this.isTouchArrow = false;
+            }
              },
 
 })
