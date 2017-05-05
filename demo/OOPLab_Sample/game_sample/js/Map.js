@@ -8,7 +8,7 @@ var GameMap = function(){
     this.YamiAtk =0;
     this.HealNum =0;
     this.BossHP =30;
-    this.MyHp=0;
+    this.MyHp=30;
     this.BossAtkCd =3 ;
     this.round =0;
     this.hasmove =0;
@@ -44,8 +44,12 @@ var GameMap = function(){
         this.HATO.scale = 0.70;
         this.BACK = new Framework.Sprite(define.imagePath + 'touch_area.jpg');
         this.BACK.scale = 0.75;
-        this.blood = new Framework.Sprite(define.imagePath + 'blood_frame.png');
-        this.blood.scale = 0.75;
+
+        //this.HP = new Framework.Sprite(define.imagePath + 'Red.png');
+        //this.HP.scale = 0.1;
+        //this.HP.width = 1000 ;
+        //this.HP.height = 10 ;
+
     };
 
     this.random = function(){
@@ -245,12 +249,6 @@ sameNum=0;
 
 
     this.draw =function(ctx){
-      var blood_picP={
-          x:700,
-          y:300
-        }
-        this.blood.position=blood_picP;
-        this.blood.draw(ctx);
         var picP ={
         x:700,
         y:512.5,
@@ -294,6 +292,8 @@ sameNum=0;
 
             }
         }
+
+        //this.HP;
     };
 
 
@@ -336,26 +336,39 @@ this.mousemove = function(e) {
 
 
   };
-
-    this.atk = function() {
-        this.BossHP = this.BossHP - this.HiAtk -this.MituAtk -this.KiAtk - this.HikariAtk -this.YamiAtk ;
+    this.life = function(){
         this.MyHp = this.MyHp +this.HealNum;
         if(this.MyHp>30){
             this.MyHp=30;
 
         }
+        if(this.MyHp<=0){
+              this.MyHp= 0;
+        }
+        this.HealNum =0;
+
+        return (this.MyHp/30);
+    };
+
+    this.atk = function() {
+        this.BossHP = this.BossHP - this.HiAtk -this.MituAtk -this.KiAtk - this.HikariAtk -this.YamiAtk ;
+
         console.log(this.MyHp,this.BossHP);
         this.HiAtk =0;
         this.KiAtk =0;
         this.MituAtk =0;
         this.HikariAtk =0;
         this.YamiAtk =0;
-        this.HealNum =0;
         this.round++;
         if(this.round >=this.BossAtkCd ){
             this.MyHp=this.MyHp-3;
             this.round=0;
         }
+        if(this.BossHP<=0){
+            return 0;
+        }
+
+        return (this.BossHP/30);
 
     };
 

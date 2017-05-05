@@ -1,4 +1,4 @@
-﻿var MyMenu = Framework.exClass(Framework.GameMainMenu , {
+var MyMenu = Framework.exClass(Framework.GameMainMenu , {
             //初始化loadingProgress需要用到的圖片
     initializeProgressResource: function() {
         this.loading = new Framework.Sprite(define.imagePath + 'loading.jpg');
@@ -22,7 +22,7 @@
     },
 
     initialize: function() {
-       Framework.Game.audio.play({name: 'GameStart', loop: true});
+       //Framework.Game.audio.play({name: 'GameStart', loop: true});
         //為了讓之後的位置較好操控, new出一個位於中心點且可以黏貼任何東西的容器
         //注意, Position都是用中心點
         this.menu.position = {

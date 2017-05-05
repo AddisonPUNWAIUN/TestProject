@@ -2,17 +2,21 @@ var ChooseCharacter = Framework.Class(Framework.Level , {
 
             load: function(){
                this.background=new Framework.Sprite(define.imagePath + 'chooseCHBG.jpg');
-               this.start=new Framework.Sprite(define.imagePath + 'start.jpg');
-               this.reset=new Framework.Sprite(define.imagePath + 'reset.jpg');
+               this.start=new Framework.Sprite(define.imagePath + 'start.png');
+               this.reset=new Framework.Sprite(define.imagePath + 'reset.png');
 
                this.c =[ new Framework.Sprite(define.imagePath + 'c1.png'),new Framework.Sprite(define.imagePath + 'c2.png'),new Framework.Sprite(define.imagePath + 'c3.png'),new Framework.Sprite(define.imagePath + 'c4.png'),new Framework.Sprite(define.imagePath + 'c5.png'),
 						         new Framework.Sprite(define.imagePath + 'c6.png'),new Framework.Sprite(define.imagePath + 'c7.png'),new Framework.Sprite(define.imagePath + 'c8.png'),new Framework.Sprite(define.imagePath + 'c9.png'),new Framework.Sprite(define.imagePath + 'c10.png')];
 
 			         this.number=[ new Framework.Sprite(define.imagePath + '1.png'),new Framework.Sprite(define.imagePath + '2.png'),new Framework.Sprite(define.imagePath + '3.png'),new Framework.Sprite(define.imagePath + '4.png'),new Framework.Sprite(define.imagePath + '5.png'),new Framework.Sprite(define.imagePath + '6.png')];
 
+               this.skilltext = [ new Framework.Sprite(define.imagePath + 'skilltext1.png'),new Framework.Sprite(define.imagePath + 'skilltext1.png'),new Framework.Sprite(define.imagePath + 'skilltext1.png'),new Framework.Sprite(define.imagePath + 'skilltext1.png'),new Framework.Sprite(define.imagePath + 'skilltext1.png'),new Framework.Sprite(define.imagePath + 'skilltext1.png'),
+                        new Framework.Sprite(define.imagePath + 'skilltext1.png'),new Framework.Sprite(define.imagePath + 'skilltext1.png'),new Framework.Sprite(define.imagePath + 'skilltext1.png'),new Framework.Sprite(define.imagePath + 'skilltext1.png'),]
+
                this.NoChooseText= new Framework.Sprite(define.imagePath + 'nochoose.png');
                this.nochooseMSG=0;
 
+               this.currentcharater=-1;
                this.previousTouch = { x: 0, y: 0 };
                this.currentTouch = { x: 0, y: 0 };
                this.count=0;
@@ -84,24 +88,66 @@ var ChooseCharacter = Framework.Class(Framework.Level , {
            },
 
            mousemove: function(e) {
-
               this.currentTouch = { x: e.x , y: e.y };
 
-              for(var i=0;i<10;i++){
-                if(this.currentTouch.x>=this.c[i].position.x-60 && this.currentTouch.x<=this.c[i].position.x+60 && this.currentTouch.y>=this.c[i].position.y-65 && this.currentTouch.y<=this.c[i].position.y+65 ){
-                    if(this.currentcharater!=i && this.currentcharater!=-1){this.c[this.currentcharater].scale = 1;}
+              for(var i=0;i<10;i++){//鼠標移至角色圖片上變大
+                if(this.currentTouch.x>=this.c[i].position.x-60 && this.currentTouch.x<=this.c[i].position.x+60 && this.currentTouch.y>=this.c[i].position.y-43 && this.currentTouch.y<=this.c[i].position.y+43 ){
                     this.currentcharater=i;
                     this.c[i].scale = 1.2;
-                    console.log("in:",this.currentcharater);
+
+                    this.skilltext[i].position = {
+                       x: Framework.Game.getCanvasWidth()/2,
+                       y: Framework.Game.getCanvasHeight()/2+150
+                    };
+                    this.rootScene.attach(this.skilltext[i]);
                 }
-                else {
-                  this.currentcharater=-1;
+              }//鼠標移至角色圖片上變大
+
+              for(var i=0;i<10;i++){//鼠標移至角色圖片上變小
+                if(this.currentcharater==-1) break;
+                if(this.currentTouch.x>this.c[this.currentcharater].position.x+60 || this.currentTouch.x<this.c[this.currentcharater].position.x-60||this.currentTouch.y>this.c[this.currentcharater].position.y+43 || this.currentTouch.y<this.c[this.currentcharater].position.y-43){
+                    this.c[this.currentcharater].scale = 1;
+                    this.skilltext[this.currentcharater].position = {
+                       x:-100,
+                       y:-100
+                    };
+                    this.rootScene.attach(this.skilltext[this.currentcharater]);
+
+                    this.currentcharater=-1;
+
+                    for(var j=0;j<10;j++){//鼠標移太快有時不會變小,再執行一次變小
+                        if(this.c[j].scale == 1.2) this.c[j].scale=1;
+                        this.skilltext[this.currentcharater].position = {
+                           x:-100,
+                           y:-100
+                        };
+                        this.rootScene.attach(this.skilltext[this.currentcharater]);
+
+                        this.currentcharater=-1;
+                    }
+
                 }
-              }
+              }//鼠標移至角色圖片上變小
 
+              //鼠標移至start圖片上變大
+              if(this.currentTouch.x>=this.start.position.x-104 && this.currentTouch.x<=this.start.position.x+104 && this.currentTouch.y>=this.start.position.y-30 && this.currentTouch.y<=this.start.position.y+20 ){
+                  this.start.scale = 1.2;
+              }//鼠標移至start圖片上變大
 
+              //鼠標移至start圖片上變小
+              if(this.currentTouch.x<this.start.position.x-104 || this.currentTouch.x>this.start.position.x+104 || this.currentTouch.y<this.start.position.y-30 || this.currentTouch.y>this.start.position.y+20 ){
+                  this.start.scale = 1;
+              }//鼠標移至圖片上變小
 
+              //鼠標移至reset圖片上變大
+              if(this.currentTouch.x>=this.reset.position.x-104 && this.currentTouch.x<=this.reset.position.x+104 && this.currentTouch.y>=this.reset.position.y-30 && this.currentTouch.y<=this.reset.position.y+20 ){
+                  this.reset.scale = 1.2;
+              }//鼠標移至reset圖片上變大
 
+              //鼠標移至reset圖片上變小
+              if(this.currentTouch.x<this.reset.position.x-104 || this.currentTouch.x>this.reset.position.x+104 | this.currentTouch.y<this.reset.position.y-30 || this.currentTouch.y>this.reset.position.y+20 ){
+                  this.reset.scale = 1;
+              }//鼠標移至reset圖片上變小
 
            },
 
@@ -123,7 +169,7 @@ var ChooseCharacter = Framework.Class(Framework.Level , {
            //選擇角色順序,存入全域變數 temp
            for(var i=0;i<10;i++){
               if(this.count>=6) break;
-              if(this.currentTouch.x>=this.c[i].position.x-60 && this.currentTouch.x<=this.c[i].position.x+60 && this.currentTouch.y>=this.c[i].position.y-65 && this.currentTouch.y<=this.c[i].position.y+65 ){
+              if(this.currentTouch.x>=this.c[i].position.x-60 && this.currentTouch.x<=this.c[i].position.x+60 && this.currentTouch.y>=this.c[i].position.y-43 && this.currentTouch.y<=this.c[i].position.y+43 ){
                   //檢查是否已選擇
                   for(var j=0;j<6;j++){
                       if(temp[j]===i) {hasexit=1;break;}
@@ -140,12 +186,12 @@ var ChooseCharacter = Framework.Class(Framework.Level , {
            //選擇角色順序,存入全域變數 temp
 
            //檢查是否有選擇隊員 start
-           if(this.currentTouch.x>=this.start.position.x-164 && this.currentTouch.x<=this.start.position.x+164 && this.currentTouch.y>=this.start.position.y-65 && this.currentTouch.y<=this.start.position.y+65 ){
+           if(this.currentTouch.x>=this.start.position.x-104 && this.currentTouch.x<=this.start.position.x+104 && this.currentTouch.y>=this.start.position.y-30 && this.currentTouch.y<=this.start.position.y+20 ){
              if(temp[0]===-1){
                this.nochooseMSG=1;
                this.NoChooseText.position = {
                   x: Framework.Game.getCanvasWidth()/2,
-                  y: Framework.Game.getCanvasHeight()/2
+                  y: Framework.Game.getCanvasHeight()/2+150
                };
                this.rootScene.attach(this.NoChooseText);
              }
@@ -157,7 +203,7 @@ var ChooseCharacter = Framework.Class(Framework.Level , {
            //檢查是否有選擇隊員
 
            //檢查是否按在reset x+-=65,y+-=164;是:nextlevel x+-100 y+x63
-           if(this.currentTouch.x>=this.reset.position.x-100 && this.currentTouch.x<=this.reset.position.x+100 && this.currentTouch.y>=this.reset.position.y-63 && this.currentTouch.y<=this.reset.position.y+63 ){
+           if(this.currentTouch.x>=this.reset.position.x-104 && this.currentTouch.x<=this.reset.position.x+104 && this.currentTouch.y>=this.reset.position.y-30 && this.currentTouch.y<=this.reset.position.y+20 ){
              this.count=0;
              temp=[-1,-1,-1,-1,-1,-1];
              for(var i=0;i<6;i++){

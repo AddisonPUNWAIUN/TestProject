@@ -1,4 +1,4 @@
-﻿var MyGame = Framework.Class(Framework.Level , {
+var MyGame = Framework.Class(Framework.Level , {
 
 	load: function(){
 		//this.random = function(){fightbackground
@@ -27,17 +27,19 @@
 						y: -100
 					}
 			}
+
 			for(var i=0;i<10;i++){
 				for(var j=0;j<10;j++){
 					if(temp[i]===j){
-						this.character[j].scale = 0.8;
+						this.character[j].scale = 0.75;
 						this.character[j].position = {
-								x: Framework.Game.getCanvasWidth()/3+(80*i)+50,
-								y: Framework.Game.getCanvasHeight() / 2-90
+								x: Framework.Game.getCanvasWidth()/3+(75*i)+60,
+								y: Framework.Game.getCanvasHeight() / 2-76
 							}
 					}
-				};
+				}
 			}
+
 			for(var i=0;i<10;i++){
 				this.rootScene.attach(this.character[i]);
 			}
@@ -47,29 +49,40 @@
 	       this.gameMap.load();
 	       this.rootScene.attach(this.gameMap);
 	       this.isTouchArrow = false;
-				 Framework.Game.audio.play({name: 'Fight', loop: true});
+				 //Framework.Game.audio.play({name: 'Fight', loop: true});
+
+                             this.myHP =1;
+                             this.bossHP=1;
 
 			},
 			update: function() {
+                    this.rootScene.update();
 			        this.gameMap.update();
 			    },
 
     draw:function(parentCtx){
         //this.rootScene.draw();
         //可支援畫各種單純的圖形和字
+        this.rootScene.draw(parentCtx);
         this.gameMap.draw(parentCtx);
+        parentCtx.fillStyle = 'red';
+        parentCtx.fillRect(395, 250, 620, 20);
+
+                             parentCtx.fillStyle = 'red';
+                             parentCtx.fillRect(478, 310, 450, 10);
+        this.ctx = parentCtx;
+
     },
 
-            update:function(){
-             this.rootScene.update();
-             },
+    update:function(){
+        this.rootScene.update();
+    },
 
+    mouseup: function(e) {
+        this.isTouchArrow = false;
+    },
 
-             mouseup: function(e) {
-             this.isTouchArrow = false;
-             },
-
-             mousedown: function(e,parentCtx) {
+    mousedown: function(e,parentCtx) {
              if(e){
              console.log(e.x, e.y);
               this.gameMap.mousedown (e);
@@ -83,6 +96,7 @@
              },
 
              mousemove: function(e,parentCtx) {
+
              if (this.isTouchArrow) {
                 this.gameMap.mousemove (e);
              this.gameMap.draw(parentCtx);
@@ -90,12 +104,25 @@
              },
 
              mouseup: function(e,parentCtx) {
+
              if(this.isTouchArrow){
                         this.gameMap.clear();
 						  this.gameMap.draw(parentCtx);
-                             this.gameMap.atk();
+                             this.HP=this.gameMap.life();
+                             this.ctx.fillStyle = 'black';
+                             this.ctx.fillRect(478, 310, 450, 10);
+                             this.ctx.fillStyle = 'red';
+                             this.ctx.fillRect(478, 310,this.HP * 450, 10);
+                             this.bossHP=this.gameMap.atk();
+                             this.ctx.fillStyle = 'black';
+                             this.ctx.fillRect(395, 250,620, 20);
+                             this.ctx.fillStyle = 'red';
+                             this.ctx.fillRect(395, 250,this.bossHP * 620, 20);
              this.isTouchArrow = false;
             }
-             },
+
+        },
+
+
 
 })
