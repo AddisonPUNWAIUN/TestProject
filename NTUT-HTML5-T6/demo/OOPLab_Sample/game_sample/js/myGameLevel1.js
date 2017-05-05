@@ -49,7 +49,7 @@ var MyGame = Framework.Class(Framework.Level , {
 	       this.gameMap.load();
 	       this.rootScene.attach(this.gameMap);
 	       this.isTouchArrow = false;
-				 //Framework.Game.audio.play({name: 'Fight', loop: true});
+				 Framework.Game.audio.play({name: 'Fight', loop: true});
 
                              this.myHP =1;
                              this.bossHP=1;
