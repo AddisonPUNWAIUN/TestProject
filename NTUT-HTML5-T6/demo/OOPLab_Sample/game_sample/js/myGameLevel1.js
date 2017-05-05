@@ -95,21 +95,6 @@ var MyGame = Framework.Class(Framework.Level , {
 
              },
 
-
-						 touchstart: function (e) {
-				         //為了要讓Mouse和Touch都有一樣的事件
-				         //又要減少Duplicated code, 故在Touch事件被觸發時, 去Trigger Mouse事件
-				         this.mousedown(e[0]);
-				     },
-
-				     touchend: function (e) {
-				         this.mouseup();
-				     },
-
-				     touchmove: function (e) {
-				         this.mousemove(e[0]);
-				     }
-						 
              mousemove: function(e,parentCtx) {
 
              if (this.isTouchArrow) {
@@ -137,6 +122,19 @@ var MyGame = Framework.Class(Framework.Level , {
             }
 
         },
+				touchstart: function (e) {
+						//為了要讓Mouse和Touch都有一樣的事件
+						//又要減少Duplicated code, 故在Touch事件被觸發時, 去Trigger Mouse事件
+						this.mousedown(e[0]);
+				},
+
+				touchend: function (e) {
+						this.mouseup();
+				},
+
+				touchmove: function (e) {
+						this.mousemove(e[0]);
+				}
 
 
 
