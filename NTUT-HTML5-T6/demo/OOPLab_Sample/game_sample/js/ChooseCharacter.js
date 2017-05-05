@@ -185,11 +185,6 @@ var ChooseCharacter = Framework.Class(Framework.Level , {
             }
            //選擇角色順序,存入全域變數 temp
 
-           click:function(e){
-               //Framework.Game.goToNextLevel();
-
-           },
-
            //檢查是否有選擇隊員 start
            if(this.currentTouch.x>=this.start.position.x-104 && this.currentTouch.x<=this.start.position.x+104 && this.currentTouch.y>=this.start.position.y-30 && this.currentTouch.y<=this.start.position.y+20 ){
              if(temp[0]===-1){
