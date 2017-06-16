@@ -1,8 +1,8 @@
 var teach = Framework.exClass(Framework.GameMainMenu , {
     load: function() {
-      this.left = new Framework.Sprite(define.imagePath + 'turnleft.PNG');//左箭頭
-      this.right = new Framework.Sprite(define.imagePath + 'turnright.PNG');//右箭頭
-      this.play = new Framework.Sprite(define.imagePath + 'play.PNG');//播放箭頭
+      this.left = new Framework.Sprite(define.imagePath + 'turnleft.png');//左箭頭
+      this.right = new Framework.Sprite(define.imagePath + 'turnright.png');//右箭頭
+      this.play = new Framework.Sprite(define.imagePath + 'play.png');//播放箭頭
       this.count = 0;
       this.teachpic = [new Framework.Sprite(define.imagePath + 'gd1.jpg'),
                         new Framework.Sprite(define.imagePath + 'gd2.jpg'),
