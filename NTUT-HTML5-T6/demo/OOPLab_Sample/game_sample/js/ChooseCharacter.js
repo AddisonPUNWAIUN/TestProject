@@ -5,16 +5,37 @@ var ChooseCharacter = Framework.Class(Framework.Level , {
                this.start=new Framework.Sprite(define.imagePath + 'start.png');
                this.reset=new Framework.Sprite(define.imagePath + 'reset.png');
 
-               this.c =[ new Framework.Sprite(define.imagePath + 'c1.png'),new Framework.Sprite(define.imagePath + 'c2.png'),new Framework.Sprite(define.imagePath + 'c3.png'),new Framework.Sprite(define.imagePath + 'c4.png'),new Framework.Sprite(define.imagePath + 'c5.png'),
-						         new Framework.Sprite(define.imagePath + 'c6.png'),new Framework.Sprite(define.imagePath + 'c7.png'),new Framework.Sprite(define.imagePath + 'c8.png'),new Framework.Sprite(define.imagePath + 'c9.png'),new Framework.Sprite(define.imagePath + 'c10.png')];
+               this.c =[ new Framework.Sprite(define.imagePath + 'c1.png'),
+                         new Framework.Sprite(define.imagePath + 'c2.png'),
+                         new Framework.Sprite(define.imagePath + 'c3.png'),
+                         new Framework.Sprite(define.imagePath + 'c4.png'),
+                         new Framework.Sprite(define.imagePath + 'c5.png'),
+						             new Framework.Sprite(define.imagePath + 'c6.png'),
+                         new Framework.Sprite(define.imagePath + 'c7.png'),
+                         new Framework.Sprite(define.imagePath + 'c8.png'),
+                         new Framework.Sprite(define.imagePath + 'c9.png'),
+                         new Framework.Sprite(define.imagePath + 'c10.png')];
 
-			         this.number=[ new Framework.Sprite(define.imagePath + '1.png'),new Framework.Sprite(define.imagePath + '2.png'),new Framework.Sprite(define.imagePath + '3.png'),new Framework.Sprite(define.imagePath + '4.png'),new Framework.Sprite(define.imagePath + '5.png'),new Framework.Sprite(define.imagePath + '6.png')];
+			         this.number=[ new Framework.Sprite(define.imagePath + '1.png'),
+                             new Framework.Sprite(define.imagePath + '2.png'),
+                             new Framework.Sprite(define.imagePath + '3.png'),
+                             new Framework.Sprite(define.imagePath + '4.png'),
+                             new Framework.Sprite(define.imagePath + '5.png'),
+                             new Framework.Sprite(define.imagePath + '6.png')];
 
-               this.skilltext = [ new Framework.Sprite(define.imagePath + 'skilltext1.png'),new Framework.Sprite(define.imagePath + 'skilltext1.png'),new Framework.Sprite(define.imagePath + 'skilltext1.png'),new Framework.Sprite(define.imagePath + 'skilltext1.png'),new Framework.Sprite(define.imagePath + 'skilltext1.png'),new Framework.Sprite(define.imagePath + 'skilltext1.png'),
-                        new Framework.Sprite(define.imagePath + 'skilltext1.png'),new Framework.Sprite(define.imagePath + 'skilltext1.png'),new Framework.Sprite(define.imagePath + 'skilltext1.png'),new Framework.Sprite(define.imagePath + 'skilltext1.png'),]
+               this.skilltext = [ new Framework.Sprite(define.imagePath + 'skilltext1.png'),
+                                  new Framework.Sprite(define.imagePath + 'skilltext2.png'),
+                                  new Framework.Sprite(define.imagePath + 'skilltext3.png'),
+                                  new Framework.Sprite(define.imagePath + 'skilltext4.png'),
+                                  new Framework.Sprite(define.imagePath + 'skilltext5.png'),
+                                  new Framework.Sprite(define.imagePath + 'skilltext6.png'),
+                                  new Framework.Sprite(define.imagePath + 'skilltext7.png'),
+                                  new Framework.Sprite(define.imagePath + 'skilltext8.png'),
+                                  new Framework.Sprite(define.imagePath + 'skilltext9.png'),
+                                  new Framework.Sprite(define.imagePath + 'skilltext10.png'),]
 
                this.NoChooseText= new Framework.Sprite(define.imagePath + 'nochoose.png');
-               this.nochooseMSG=0;
+               this.nochooseMSG=0;//判斷有沒有選隊員
 
                this.currentcharater=-1;
                this.previousTouch = { x: 0, y: 0 };
@@ -80,7 +101,7 @@ var ChooseCharacter = Framework.Class(Framework.Level , {
             },
 
            update:function(){
-           this.rootScene.update();
+             this.rootScene.update();
            },
 
            draw: function(parentCtx) {
@@ -112,19 +133,6 @@ var ChooseCharacter = Framework.Class(Framework.Level , {
                        y:-100
                     };
                     this.rootScene.attach(this.skilltext[this.currentcharater]);
-
-                    this.currentcharater=-1;
-
-                    for(var j=0;j<10;j++){//鼠標移太快有時不會變小,再執行一次變小
-                        if(this.c[j].scale == 1.2) this.c[j].scale=1;
-                        this.skilltext[this.currentcharater].position = {
-                           x:-100,
-                           y:-100
-                        };
-                        this.rootScene.attach(this.skilltext[this.currentcharater]);
-
-                        this.currentcharater=-1;
-                    }
 
                 }
               }//鼠標移至角色圖片上變小
@@ -170,6 +178,7 @@ var ChooseCharacter = Framework.Class(Framework.Level , {
            for(var i=0;i<10;i++){
               if(this.count>=6) break;
               if(this.currentTouch.x>=this.c[i].position.x-60 && this.currentTouch.x<=this.c[i].position.x+60 && this.currentTouch.y>=this.c[i].position.y-43 && this.currentTouch.y<=this.c[i].position.y+43 ){
+                  Framework.Game.audio.play({name: 'button2'});
                   //檢查是否已選擇
                   for(var j=0;j<6;j++){
                       if(temp[j]===i) {hasexit=1;break;}
@@ -196,7 +205,7 @@ var ChooseCharacter = Framework.Class(Framework.Level , {
                this.rootScene.attach(this.NoChooseText);
              }
              else{
-               Framework.Game.audio.stopAll();
+               Framework.Game.audio.play({name: 'button'});
                Framework.Game.goToNextLevel();//65 164
              }
            }
@@ -205,6 +214,7 @@ var ChooseCharacter = Framework.Class(Framework.Level , {
            //檢查是否按在reset x+-=65,y+-=164;是:nextlevel x+-100 y+x63
            if(this.currentTouch.x>=this.reset.position.x-104 && this.currentTouch.x<=this.reset.position.x+104 && this.currentTouch.y>=this.reset.position.y-30 && this.currentTouch.y<=this.reset.position.y+20 ){
              this.count=0;
+             Framework.Game.audio.play({name: 'button'});
              temp=[-1,-1,-1,-1,-1,-1];
              for(var i=0;i<6;i++){
                   this.number[i].position = {
@@ -229,4 +239,4 @@ var ChooseCharacter = Framework.Class(Framework.Level , {
            touchmove: function (e) {
                this.mousemove(e[0]);
            }
-           });
+});

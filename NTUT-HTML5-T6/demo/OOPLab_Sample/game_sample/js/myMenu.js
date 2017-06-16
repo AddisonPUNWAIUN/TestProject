@@ -19,10 +19,11 @@ var MyMenu = Framework.exClass(Framework.GameMainMenu , {
 
     load: function() {
         this.menu = new Framework.Sprite(define.imagePath + 'padmenu.jpg');
+        this.gameteach = new Framework.Sprite(define.imagePath + 'gamedes.png');
     },
 
     initialize: function() {
-       Framework.Game.audio.play({name: 'GameStart', loop: true});
+        Framework.Game.audio.play({name: 'GameStart', loop: true});
         //為了讓之後的位置較好操控, new出一個位於中心點且可以黏貼任何東西的容器
         //注意, Position都是用中心點
         this.menu.position = {
@@ -31,6 +32,14 @@ var MyMenu = Framework.exClass(Framework.GameMainMenu , {
         };
         this.menu.scale = 2;
         this.rootScene.attach(this.menu);
+
+        this.gameteach.position = {
+            x: Framework.Game.getCanvasWidth() / 2,
+            y: Framework.Game.getCanvasHeight() / 2+150
+        };
+        this.gameteach.scale = 0.7;
+        this.rootScene.attach(this.gameteach);
+
 
         this.rectPosition = {
             x: Framework.Game.getCanvasWidth() / 2 - 130,
@@ -49,29 +58,22 @@ var MyMenu = Framework.exClass(Framework.GameMainMenu , {
         //this.rootScene.draw();一定要在第一行
         this.rootScene.draw(parentCtx);
         this.menu.draw(parentCtx);
+        this.gameteach.draw(parentCtx);
         //this.rootScene.draw();
-        //可支援畫各種單純的圖形和字
-        parentCtx.font = '70pt bold';
-        parentCtx.fillStyle = 'withe';
-        parentCtx.textBaseline = 'top';
-        parentCtx.textAlign = 'center';
-        parentCtx.fillText('START', this.rectPosition.x + 130, this.rectPosition.y, 260);
+
     },
 
     mouseup: function(e) {
     },
 
     mousedown: function(e) {
+      //x<854 x>493 y<594 y>435
+      if(e.x<854 && e.x>493 && e.y<594 && e.y>435){
+        Framework.Game.audio.play({name: 'button'});//按鈕音效
+        Framework.Game.goToLevel('teach');
+      }
+      else Framework.Game.goToNextLevel();
         //console.log為Browser提供的function, 可以在debugger的console內看到被印出的訊息
-        Framework.Game.goToNextLevel();
-    },
-
-    click:function(e){
-        //Framework.Game.goToNextLevel();
-
-    },
-
-    mousemove: function(e) {
     },
 
     mouseup: function(e) {

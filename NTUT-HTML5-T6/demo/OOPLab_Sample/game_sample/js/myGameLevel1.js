@@ -1,141 +1,233 @@
 var MyGame = Framework.Class(Framework.Level , {
-
 	load: function(){
-		//this.random = function(){fightbackground
-			this.fightbackground=new Framework.Sprite(define.imagePath + 'fightbackground.jpg');
-			this.character=[ new Framework.Sprite(define.imagePath + 'c1.png'),new Framework.Sprite(define.imagePath + 'c2.png'),new Framework.Sprite(define.imagePath + 'c3.png'),new Framework.Sprite(define.imagePath + 'c4.png'),new Framework.Sprite(define.imagePath + 'c5.png')
-											,new Framework.Sprite(define.imagePath + 'c6.png'),new Framework.Sprite(define.imagePath + 'c7.png'),new Framework.Sprite(define.imagePath + 'c8.png'),new Framework.Sprite(define.imagePath + 'c9.png'),new Framework.Sprite(define.imagePath + 'c10.png')];
-			//fightbackground
-			this.fightbackground.position = {
-					x: Framework.Game.getCanvasWidth() / 2,
-					y: Framework.Game.getCanvasHeight() / 2
-			};
-			this.fightbackground.scale = 2;
-			this.rootScene.attach(this.fightbackground);
-			//fightbackground
+        //background
+        this.fightbackground=new Framework.Sprite(define.imagePath + 'fightbackground.jpg');
+        this.fightbackground.position = {
+                x: Framework.Game.getCanvasWidth() / 2,
+                y: Framework.Game.getCanvasHeight() / 2
+        };
+        this.fightbackground.scale = 2;
+        //background
 
-			//boss
-			this.boss = new boss1();
-			this.boss.load();
-			this.rootScene.attach(this.boss);
-			//boss
+        //character
+        this.character_p=new character_pic();
+        this.character_p.load();
+        //character
 
-			//character
-			for(var i=0;i<10;i++){
-				this.character[i].position = {
-						x: -100,
-						y: -100
-					}
-			}
+        //boss
+        this.boss = new boss();
+        this.boss.load();
+        //boss
 
-			for(var i=0;i<10;i++){
-				for(var j=0;j<10;j++){
-					if(temp[i]===j){
-						this.character[j].scale = 0.75;
-						this.character[j].position = {
-								x: Framework.Game.getCanvasWidth()/3+(75*i)+60,
-								y: Framework.Game.getCanvasHeight() / 2-76
-							}
-					}
-				}
-			}
+        //隊伍
+        this.pt = new pt();
+        //隊伍
 
-			for(var i=0;i<10;i++){
-				this.rootScene.attach(this.character[i]);
-			}
-			//character
+       //MAP
+       this.gameMap = new GameMap();
+       this.gameMap.load();
+       this.rootScene.attach(this.gameMap);
+       //MAP
+       this.isTouchArrow = false;//helper
+       this.HP =1;//HP(%)
+       this.bossHP=1;//bossHP(%)
+       this.playData = [];//playData
+    },
 
-	       this.gameMap = new GameMap();
-	       this.gameMap.load();
-	       this.rootScene.attach(this.gameMap);
-	       this.isTouchArrow = false;
-				 Framework.Game.audio.play({name: 'Fight', loop: true});
 
-                             this.myHP =1;
-                             this.bossHP=1;
-
-			},
-			update: function() {
-                    this.rootScene.update();
-			        this.gameMap.update();
-			    },
+    initialize: function() {
+				Framework.Game.audio.play({name: 'Fight', loop: true});
+    },
+    update: function() {
+        this.gameMap.update();
+    },
 
     draw:function(parentCtx){
-        //this.rootScene.draw();
         //可支援畫各種單純的圖形和字
+        this.fightbackground.draw();//background
+        this.boss.draw();//boss
+        this.character_p.draw();//character
         this.rootScene.draw(parentCtx);
-        this.gameMap.draw(parentCtx);
+        this.gameMap.draw(parentCtx);//MAP
+        //血條初始化
         parentCtx.fillStyle = 'red';
-        parentCtx.fillRect(395, 250, 620, 20);
+        parentCtx.fillRect(395, 210, 620, 20);
+        //血條初始化
+        parentCtx.fillStyle = 'red';
+        parentCtx.fillRect(478, 310, 450, 10);
 
-                             parentCtx.fillStyle = 'red';
-                             parentCtx.fillRect(478, 310, 450, 10);
         this.ctx = parentCtx;
-
     },
 
-    update:function(){
-        this.rootScene.update();
-    },
-
-    mouseup: function(e) {
-        this.isTouchArrow = false;
-    },
 
     mousedown: function(e,parentCtx) {
-             if(e){
-             console.log(e.x, e.y);
-              this.gameMap.mousedown (e);
-             this.isTouchArrow = true;
-             this.gameMap.draw(parentCtx);
-             }
-             },
+        if(e.x<1300 && e.x>1000 && e.y<600 && e.y>500){//back to menu
+						gameboss=1;
+            temp=[-1,-1,-1,-1,-1,-1];
+            Iseasy=0;
+					  Framework.Game.audio.stopAll();
+            Framework.Game.goToLevel('menu');
+        }
 
-             click:function(e){
+        if(e){
+            this.gameMap.mousedown (e);
+            this.isTouchArrow = true;
+        }
+	 },
 
-             },
+    click:function(e){
 
-             mousemove: function(e,parentCtx) {
+    },
+    mousemove: function(e,parentCtx) {
+        if (this.isTouchArrow) {
+            this.fightbackground.draw();//draw
+            this.boss.draw();//draw
+            this.character_p.draw();//draw
+            this.gameMap.mousemove (e); //to map
+            this.gameMap.draw(parentCtx);//draw
+            this.ctx.fillStyle = 'black';
+            this.ctx.fillRect(478, 310, 450, 10);
+            this.ctx.fillStyle = 'red';
+            this.ctx.fillRect(478, 310,this.HP * 450, 10);
+            this.ctx.fillStyle = 'black';
+            this.ctx.fillRect(395, 210,620, 20);
+            this.ctx.fillStyle = 'red';
+            this.ctx.fillRect(395, 210,this.bossHP * 620, 20);
+        }
+    },
 
-             if (this.isTouchArrow) {
-                this.gameMap.mousemove (e);
-             this.gameMap.draw(parentCtx);
-             }
-             },
+    mouseup: function(e,parentCtx) {
+	    this.fightbackground.draw();//draw
+		this.boss.draw();//draw
+        this.character_p.draw();//draw
+        this.gameMap.mouseup ();//to map
+        this.gameMap.draw(parentCtx);
+        if(this.isTouchArrow){
+            this.gameMap.clear();//to map
+            this.playData=this.gameMap.getdate();//to map
+            this.HP=this.gameMap.life();//to map
+            this.bossHP=this.gameMap.atk();//to map
+            this.HP=this.gameMap.life();//to map
+            this.boss.draw(parentCtx);//draw
+            //draw play date
+            this.ctx.fillStyle = 'black';
+            this.ctx.fillRect(478, 310, 450, 10);
+            this.ctx.fillStyle = 'red';
+            this.ctx.fillRect(478, 310,this.HP * 450, 10);
+            this.ctx.font = '15pt Algerian';
+            this.ctx.globalAlpha=1;
+            this.ctx.fillStyle = 'blue';
+            this.ctx.textBaseline = 'top';
+            this.ctx.textAlign = 'left';
+            this.ctx.fillText( this.HP*100 +" % " ,478, 310);
+            this.ctx.fillStyle = 'black';
+            this.ctx.fillRect(395, 210,620, 20);
+            this.ctx.fillStyle = 'red';
+            this.ctx.fillRect(395, 210,this.bossHP * 620, 20);
+            this.ctx.font = '15pt Algerian';
+            this.ctx.globalAlpha=1;
+            this.ctx.fillStyle = 'blue';
+            this.ctx.textBaseline = 'top';
+            this.ctx.textAlign = 'left';
+            this.ctx.fillText( this.bossHP*100 +" % " ,395, 210);
+            this.gameMap.draw(parentCtx);
+            this.ctx.globalAlpha=0.8;
+            this.ctx.fillStyle = 'black';
+            this.ctx.fillRect(10, 40, 300, 300);
+            this.ctx.font = '30pt Algerian';
+            this.ctx.globalAlpha=1;
+            this.ctx.fillStyle = 'yellow';
+            this.ctx.textBaseline = 'top';
+            this.ctx.textAlign = 'left';
+            this.ctx.fillText("comble="+this.playData[0] , 10, 40);
+            this.ctx.font = '30pt Algerian';
+            this.ctx.globalAlpha=1;
+            this.ctx.fillStyle = 'yellow';
+            this.ctx.textBaseline = 'top';
+            this.ctx.textAlign = 'left';
+            this.ctx.fillText("火攻擊="+this.playData[1] , 10, 80);
+            this.ctx.font = '30pt Algerian';
+            this.ctx.globalAlpha=1;
+            this.ctx.fillStyle = 'yellow';
+            this.ctx.textBaseline = 'top';
+            this.ctx.textAlign = 'left';
+            this.ctx.fillText("水攻擊="+this.playData[2] , 10, 120);
+            this.ctx.font = '30pt Algerian';
+            this.ctx.globalAlpha=1;
+            this.ctx.fillStyle = 'yellow';
+            this.ctx.textBaseline = 'top';
+            this.ctx.textAlign = 'left';
+            this.ctx.fillText("木攻擊="+this.playData[3] , 10, 160);
+            this.ctx.font = '30pt Algerian';
+            this.ctx.globalAlpha=1;
+            this.ctx.fillStyle = 'yellow';
+            this.ctx.textBaseline = 'top';
+            this.ctx.textAlign = 'left';
+            this.ctx.fillText("光攻擊="+this.playData[4] , 10, 200);
+            this.ctx.font = '30pt Algerian';
+            this.ctx.globalAlpha=1;
+            this.ctx.fillStyle = 'yellow';
+            this.ctx.textBaseline = 'top';
+            this.ctx.textAlign = 'left';
+            this.ctx.fillText("暗攻擊="+this.playData[5] , 10, 240);
 
-             mouseup: function(e,parentCtx) {
+            this.CDdate=this.gameMap.getCd();//get CD
 
-             if(this.isTouchArrow){
-                        this.gameMap.clear();
-						  this.gameMap.draw(parentCtx);
-                             this.HP=this.gameMap.life();
-                             this.ctx.fillStyle = 'black';
-                             this.ctx.fillRect(478, 310, 450, 10);
-                             this.ctx.fillStyle = 'red';
-                             this.ctx.fillRect(478, 310,this.HP * 450, 10);
-                             this.bossHP=this.gameMap.atk();
-                             this.ctx.fillStyle = 'black';
-                             this.ctx.fillRect(395, 250,620, 20);
-                             this.ctx.fillStyle = 'red';
-                             this.ctx.fillRect(395, 250,this.bossHP * 620, 20);
-             this.isTouchArrow = false;
+            this.ctx.font = '30pt Algerian';
+            this.ctx.globalAlpha=1;
+            this.ctx.fillStyle = 'yellow';
+            this.ctx.textBaseline = 'top';
+            this.ctx.textAlign = 'left';
+            this.ctx.fillText(this.CDdate[0] , 500 , 250);
+            this.ctx.font = '30pt Algerian';
+            this.ctx.globalAlpha=1;
+            this.ctx.fillStyle = 'yellow';
+            this.ctx.textBaseline = 'top';
+            this.ctx.textAlign = 'left';
+            this.ctx.fillText(this.CDdate[1] , 570 , 250);
+            this.ctx.font = '30pt Algerian';
+            this.ctx.globalAlpha=1;
+            this.ctx.fillStyle = 'yellow';
+            this.ctx.textBaseline = 'top';
+            this.ctx.textAlign = 'left';
+            this.ctx.fillText(this.CDdate[2] , 640 , 250);
+            this.ctx.font = '30pt Algerian';
+            this.ctx.globalAlpha=1;
+            this.ctx.fillStyle = 'yellow';
+            this.ctx.textBaseline = 'top';
+            this.ctx.textAlign = 'left';
+            this.ctx.fillText(this.CDdate[3] , 710 , 250);
+            this.ctx.font = '30pt Algerian';
+            this.ctx.globalAlpha=1;
+            this.ctx.fillStyle = 'yellow';
+            this.ctx.textBaseline = 'top';
+            this.ctx.textAlign = 'left';
+            this.ctx.fillText(this.CDdate[4] , 780 , 250);
+            this.ctx.font = '30pt Algerian';
+            this.ctx.globalAlpha=1;
+            this.ctx.fillStyle = 'yellow';
+            this.ctx.textBaseline = 'top';
+            this.ctx.textAlign = 'left';
+            this.ctx.fillText(this.CDdate[5] , 850 , 250);
+            this.ctx.font = '30pt Algerian';
+            this.ctx.globalAlpha=1;
+            this.ctx.fillStyle = 'yellow';
+            this.ctx.textBaseline = 'top';
+            this.ctx.textAlign = 'left';
+            this.ctx.fillText(this.CDdate[6] , 480 , 100);
+            //draw play date end
+            this.isTouchArrow = false;
+
             }
+                            this.ctx.globalAlpha=0.8;
+                             this.ctx.fillStyle = 'black';
+                             this.ctx.fillRect(1000, 500, 300, 100);
+                             this.ctx.font = '30pt Algerian';
+                             this.ctx.globalAlpha=1;
+                             this.ctx.fillStyle = 'yellow';
+                             this.ctx.textBaseline = 'top';
+                             this.ctx.textAlign = 'left';
+                             this.ctx.fillText("Back to menu",1000, 500);
 
         },
-				touchstart: function (e) {
-						//為了要讓Mouse和Touch都有一樣的事件
-						//又要減少Duplicated code, 故在Touch事件被觸發時, 去Trigger Mouse事件
-						this.mousedown(e[0]);
-				},
-
-				touchend: function (e) {
-						this.mouseup();
-				},
-
-				touchmove: function (e) {
-						this.mousemove(e[0]);
-				}
-
-
-
 })
