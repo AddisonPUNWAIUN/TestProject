@@ -13,8 +13,8 @@ var teach = Framework.exClass(Framework.GameMainMenu , {
                         new Framework.Sprite(define.imagePath + 'gd7.jpg'),
                         new Framework.Sprite(define.imagePath + 'gd8.jpg'),
                         new Framework.Sprite(define.imagePath + 'gd9.jpg'),
-                        new Framework.Sprite(define.imagePath + 'gd10.jpg'),
-                        new Framework.Sprite(define.imagePath + 'gd11.jpg')];//教學圖片
+                        new Framework.Sprite(define.imagePath + 'gd10.JPG'),
+                        new Framework.Sprite(define.imagePath + 'gd11.JPG')];//教學圖片
 
       this.current=this.teachpic[this.count];
       this.current.position = {//說明圖位置初始
