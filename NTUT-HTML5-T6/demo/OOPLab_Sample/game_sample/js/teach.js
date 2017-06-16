@@ -1,20 +1,20 @@
 var teach = Framework.exClass(Framework.GameMainMenu , {
     load: function() {
-      this.left = new Framework.Sprite(define.imagePath + 'turnleft.png');//左箭頭
-      this.right = new Framework.Sprite(define.imagePath + 'turnright.png');//右箭頭
-      this.play = new Framework.Sprite(define.imagePath + 'play.png');//播放箭頭
+      this.left = new Framework.Sprite(define.imagePath + 'turnleft.PNG');//左箭頭
+      this.right = new Framework.Sprite(define.imagePath + 'turnright.PNG');//右箭頭
+      this.play = new Framework.Sprite(define.imagePath + 'play.PNG');//播放箭頭
       this.count = 0;
-      this.teachpic = [new Framework.Sprite(define.imagePath + 'gd1.jpg'),
-                        new Framework.Sprite(define.imagePath + 'gd2.jpg'),
-                        new Framework.Sprite(define.imagePath + 'gd3.jpg'),
-                        new Framework.Sprite(define.imagePath + 'gd4.jpg'),
-                        new Framework.Sprite(define.imagePath + 'gd5.jpg'),
-                        new Framework.Sprite(define.imagePath + 'gd6.jpg'),
-                        new Framework.Sprite(define.imagePath + 'gd7.jpg'),
-                        new Framework.Sprite(define.imagePath + 'gd8.jpg'),
-                        new Framework.Sprite(define.imagePath + 'gd9.jpg'),
-                        new Framework.Sprite(define.imagePath + 'gd10.jpg'),
-                        new Framework.Sprite(define.imagePath + 'gd11.jpg')];//教學圖片
+      this.teachpic = [new Framework.Sprite(define.imagePath + 'gd1.JPG'),
+                        new Framework.Sprite(define.imagePath + 'gd2.JPG'),
+                        new Framework.Sprite(define.imagePath + 'gd3.JPG'),
+                        new Framework.Sprite(define.imagePath + 'gd4.JPG'),
+                        new Framework.Sprite(define.imagePath + 'gd5.JPG'),
+                        new Framework.Sprite(define.imagePath + 'gd6.JPG'),
+                        new Framework.Sprite(define.imagePath + 'gd7.JPG'),
+                        new Framework.Sprite(define.imagePath + 'gd8.JPG'),
+                        new Framework.Sprite(define.imagePath + 'gd9.JPG'),
+                        new Framework.Sprite(define.imagePath + 'gd10.JPG'),
+                        new Framework.Sprite(define.imagePath + 'gd11.JPG')];//教學圖片
 
       this.current=this.teachpic[this.count];
       this.current.position = {//說明圖位置初始
